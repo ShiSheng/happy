@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <circle cx="64" cy="64" r="52" fill="#FFE8E0" stroke="#E76F51" stroke-width="4"/>
+  <path d="M44 56l8 40h24l8-40H44z" fill="#FFD4C4"/>
+  <circle cx="56" cy="48" r="6" fill="#4A3728"/>
+  <circle cx="72" cy="48" r="6" fill="#4A3728"/>
+  <path d="M56 68c4 6 12 6 16 0" stroke="#4A3728" stroke-width="2" fill="none"/>
+  <text x="64" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#4A3728">Lv.5</text>
+</svg>

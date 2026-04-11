@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String?  @unique
+  createdAt    DateTime @default(now())
+  pets         Pet[]
+  currentPetId String?  @unique
+  currentPet   Pet?     @relation("CurrentPetForUser", fields: [currentPetId], references: [id], onDelete: SetNull)
+}
+
+model Pet {
+  id            String           @id @default(cuid())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  xp            Int              @default(0)
+  coins         Int              @default(0)
+  graduatedAt   DateTime?
+  /// 各等级称呼覆盖，JSON 字符串（SQLite 存 TEXT）
+  levelDisplayNames String?
+  interactionLogs InteractionLog[]
+  exchangeLogs    ExchangeLog[]
+  levelPortraits PetLevelPortrait[]
+  currentForUser User?   @relation("CurrentPetForUser")
+}
+
+model PetLevelPortrait {
+  id        String   @id @default(cuid())
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  level     Int
+  imagePath String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([petId, level])
+}
+
+model InteractionRule {
+  id        String               @id @default(cuid())
+  polarity  String
+  name      String
+  xpDelta   Int
+  coinDelta Int
+  active    Boolean              @default(true)
+  logItems  InteractionLogItem[]
+}
+
+model InteractionLog {
+  id         String               @id @default(cuid())
+  petId      String
+  pet        Pet                  @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt  DateTime             @default(now())
+  totalXp    Int
+  totalCoins Int
+  polarity   String
+  items      InteractionLogItem[]
+}
+
+model InteractionLogItem {
+  id     String          @id @default(cuid())
+  logId  String
+  log    InteractionLog  @relation(fields: [logId], references: [id], onDelete: Cascade)
+  ruleId String
+  rule   InteractionRule @relation(fields: [ruleId], references: [id])
+}
+
+model Gift {
+  id         String        @id @default(cuid())
+  name       String
+  pointCost  Int
+  exchangeLogs ExchangeLog[]
+}
+
+model ExchangeLog {
+  id          String   @id @default(cuid())
+  petId       String
+  pet         Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  giftId      String
+  gift        Gift     @relation(fields: [giftId], references: [id])
+  pointsSpent Int
+  createdAt   DateTime @default(now())
+}

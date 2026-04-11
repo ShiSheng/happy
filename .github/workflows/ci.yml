@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+      - run: npx prisma generate
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+      - run: npx prisma db seed
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          DATABASE_URL: file:./prisma/ci.db

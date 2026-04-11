@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <circle cx="64" cy="64" r="52" fill="#E8F0FF" stroke="#7BA3D4" stroke-width="4"/>
+  <path d="M40 70c0-16 48-16 48 0v8c0 8-48 8-48 0v-8z" fill="#B8D4F0"/>
+  <circle cx="54" cy="62" r="4" fill="#4A3728"/>
+  <circle cx="74" cy="62" r="4" fill="#4A3728"/>
+  <text x="64" y="104" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#4A3728">Lv.4</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <circle cx="64" cy="64" r="52" fill="#F3E8FF" stroke="#9B7EBD" stroke-width="4"/>
+  <path d="M40 58h48v4H40zM52 46l-4-8M76 46l4-8" stroke="#6B4F8F" stroke-width="3" stroke-linecap="round"/>
+  <rect x="48" y="62" width="32" height="24" rx="4" fill="#D4C4E8"/>
+  <text x="64" y="80" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#4A3728">�</text>
+  <text x="64" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#4A3728">Lv.6</text>
+</svg>

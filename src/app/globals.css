@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* 从 src/app 向上一级扫描整个 src，确保生成 bg-canvas / text-ink 等自定义工具类（避免只剩默认灰阶） */
+@source "..";
+
+/*
+  暖色主题：必须在 @theme 中写字面量颜色。
+  切勿写 --color-x: var(--color-x)，会造成自引用，Tailwind 无法生成 bg-canvas / text-ink 等类。
+*/
+@theme {
+  /* 参考高保真：奶油底 + 深棕字 + 主橙 #F38E3B */
+  --color-canvas: #fdf8f1;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f3ebe0;
+  --color-ink: #4a3728;
+  --color-ink-muted: #7d6c5c;
+  --color-line: #e8ddd0;
+  --color-line-strong: #d8cbb8;
+  --color-peach: #f38e3b;
+  --color-peach-hover: #e67e2f;
+  --color-coral: #e76f51;
+  --color-leaf: #5a9e7d;
+  --color-leaf-soft: #e8f5ee;
+  --color-terracotta: #c67b5c;
+  --color-terracotta-soft: #fceee8;
+  --color-berry: #c45c5c;
+  --color-honey: #f6d365;
+  --color-bubble: #ffe8d6;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  /*
+   * 用字面量兜底：即使某次构建未扫到 @apply 中的 bg-canvas，页面仍是暖色底 + 深棕字，
+   * 不会出现「黑白默认站」观感。
+   */
+  body {
+    background-color: #fdf8f1;
+    color: #4a3728;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@keyframes celebrate-float {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-36px) scale(1.1);
+  }
+}
+
+@keyframes reward-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #f4a261;
+  outline-offset: 2px;
+}
