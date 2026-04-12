@@ -25,6 +25,10 @@ export default defineConfig({
       DATABASE_URL:
         process.env.DATABASE_URL ??
         "postgresql://postgres:postgres@127.0.0.1:5432/happy_e2e",
+      DIRECT_URL:
+        process.env.DIRECT_URL ??
+        process.env.DATABASE_URL ??
+        "postgresql://postgres:postgres@127.0.0.1:5432/happy_e2e",
       AUTH_SECRET:
         process.env.AUTH_SECRET ??
         "playwright-e2e-auth-secret-min-32-characters!!",

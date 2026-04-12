@@ -4,7 +4,8 @@
 
 | 变量 | 说明 |
 |------|------|
-| `DATABASE_URL` | Prisma 连接串，需 **PostgreSQL**，例如 `postgresql://postgres:postgres@localhost:5432/happy`。 |
+| `DATABASE_URL` | Prisma **运行时**连接串（PostgreSQL）。Neon 等建议用 **Pooled** 连接（若提供）。 |
+| `DIRECT_URL` | **迁移**（`prisma migrate deploy`）用直连串。Neon 填 Dashboard 的 **Direct**；本地可与 `DATABASE_URL` 相同。 |
 | `DEFAULT_USER_ID` | 可选。指定默认操作所绑定的用户 id；不设置时取数据库中最早创建的用户（seed 后的演示账号）。 |
 
 ## 本地初始化数据库
@@ -16,7 +17,7 @@ npx prisma db seed
 
 ## CI
 
-流水线通过 **GitHub Actions `services: postgres`** 启动 Postgres，使用 `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/happy_ci` 执行 `prisma migrate deploy` 与 `db seed`。
+流水线通过 **GitHub Actions `services: postgres`** 启动 Postgres，使用 `DATABASE_URL` 与 `DIRECT_URL`（均为 `postgresql://postgres:postgres@localhost:5432/happy_ci`）执行 `prisma migrate deploy` 与 `db seed`。
 
 ## 界面与 E2E
 

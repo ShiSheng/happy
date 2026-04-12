@@ -4,11 +4,11 @@ Next.js 16 + Prisma + PostgreSQL 的行为激励与宠物养成演示应用。
 
 ## 本地开发
 
-需本机或 Docker 可访问的 **PostgreSQL**（示例：`docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy postgres:16-alpine`）。在 `.env` 中设置 `DATABASE_URL`，例如 `postgresql://postgres:postgres@localhost:5432/happy`。
+需本机或 Docker 可访问的 **PostgreSQL**（示例：`docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy postgres:16-alpine`）。在 `.env` 中设置 `DATABASE_URL` 与 `DIRECT_URL`（本地可填相同值），见 [`.env.example`](.env.example)。
 
 ```bash
 npm install
-cp .env.example .env   # 按需填写 DATABASE_URL
+cp .env.example .env   # 按需填写 DATABASE_URL、DIRECT_URL
 npx prisma migrate deploy
 npm run db:seed
 npm run dev
@@ -71,7 +71,11 @@ git push -u origin main
 
    其中已包含 `prisma migrate deploy`（应用迁移）+ `prisma generate` + `next build`。
 
-3. **数据库**：在 Vercel **Environment Variables** 中配置 `DATABASE_URL` 为托管 Postgres 连接串（**Neon / Supabase / Vercel Postgres** 等）。首次部署前在空库上执行迁移（`vercel-build` 已包含 `prisma migrate deploy`）。本地开发同样需要 Postgres，见下文。
+3. **数据库**：在 Vercel **Environment Variables** 中配置（**Production** 与需要的 **Preview** 都要勾选）：
+   - **`DATABASE_URL`**：运行时连接串。**Neon** 建议用控制台里的 **Pooled**（若列出 `?sslmode=require` 请保留）。
+   - **`DIRECT_URL`**：**迁移专用**直连串。Neon 用 **Direct**（非 `-pooler` 主机名）；Supabase 常用 **Session mode** 或直连端口。本地若只用一条串，两处可填相同值。
+   
+   `vercel-build` 会在构建时执行 `prisma migrate deploy`，需能连上 `DIRECT_URL`。若日志仍失败，请把 **Prisma 报错全文**（`Error code: P…` 起）复制出来排查。
 
 4. **上传图片**：`public/uploads` 在 Serverless 上**非持久**。生产环境长期方案为对象存储（S3 / R2 等）；当前实现适合本地开发。
 
