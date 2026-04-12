@@ -52,7 +52,7 @@ export function SettlementCelebration({
   const isPositive = payload.polarity === "positive";
 
   const shellClass = isPositive
-    ? "border-leaf/35 bg-gradient-to-br from-leaf-soft via-bubble/80 to-surface-muted shadow-[0_12px_40px_-16px_rgba(74,124,89,0.35)]"
+    ? "border-peach/35 bg-gradient-to-br from-bubble via-bubble/80 to-surface-muted shadow-[0_12px_40px_-16px_rgba(243,142,59,0.35)]"
     : "border-honey/50 bg-gradient-to-br from-honey/35 via-bubble/70 to-surface-muted shadow-[0_12px_40px_-16px_rgba(244,162,97,0.25)]";
 
   return (

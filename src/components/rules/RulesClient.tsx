@@ -123,9 +123,9 @@ export function RulesClient({ rules }: Props) {
       </Card>
 
       <section className="grid gap-6 md:grid-cols-2">
-        <Card className="border-leaf/30 bg-leaf-soft/30">
+        <Card className="border-peach/30 bg-bubble/30">
           <CardHeader>
-            <CardTitle className="text-leaf">正向</CardTitle>
+            <CardTitle className="text-peach">正向</CardTitle>
           </CardHeader>
           <CardBody>
             <ul className="space-y-2 text-sm">
@@ -262,7 +262,7 @@ function RuleRow({
           <Button
             variant="ghost"
             size="compact"
-            className="text-leaf"
+            className="text-peach"
             onClick={() => {
               setDraft({
                 polarity: rule.polarity,

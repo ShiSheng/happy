@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatDateTimeUtc } from "@/lib/format-display";
+import { formatDateTimeChina } from "@/lib/format-display";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import type { InteractionHistoryItemDTO } from "@/types/domain";
@@ -39,7 +39,7 @@ function PaginatedHistoryBody({
               <span
                 className={
                   h.polarity === "positive"
-                    ? "font-semibold text-leaf"
+                    ? "font-semibold text-peach"
                     : "font-semibold text-terracotta"
                 }
               >
@@ -48,7 +48,7 @@ function PaginatedHistoryBody({
               <span className="ml-2 text-ink">{h.ruleNames.join("、")}</span>
             </div>
             <div className="text-xs text-ink-muted">
-              {formatDateTimeUtc(h.createdAt)} · XP{" "}
+              {formatDateTimeChina(h.createdAt)} · XP{" "}
               {h.xpDelta > 0 ? "+" : ""}
               {h.xpDelta} · 币 {h.coinDelta > 0 ? "+" : ""}
               {h.coinDelta}

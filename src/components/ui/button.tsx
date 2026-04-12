@@ -19,7 +19,7 @@ const variantClass: Record<ButtonVariant, string> = {
   danger:
     "border-2 border-berry/40 text-berry hover:bg-terracotta-soft active:scale-[0.98] disabled:opacity-50",
   positive:
-    "bg-leaf text-white shadow-sm hover:opacity-90 active:scale-[0.98] disabled:opacity-50",
+    "bg-peach text-white shadow-sm hover:bg-peach-hover active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100",
   negative:
     "bg-berry text-white shadow-sm hover:opacity-90 active:scale-[0.98] disabled:opacity-50",
 };

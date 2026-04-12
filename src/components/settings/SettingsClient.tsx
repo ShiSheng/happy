@@ -154,7 +154,7 @@ export function SettingsClient({ email, pets, currentPetId }: Props) {
                       编辑内可修改名称、各等级称呼与形象图。
                     </p>
                     {p.id === currentPetId ? (
-                      <p className="mt-1 text-xs font-semibold text-leaf">
+                      <p className="mt-1 text-xs font-semibold text-peach">
                         当前在乐园参展
                       </p>
                     ) : null}

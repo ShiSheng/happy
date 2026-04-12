@@ -15,7 +15,7 @@ export function Stepper({ steps }: { steps: Step[] }) {
           <span
             className={cn(
               "rounded-full px-3 py-1.5",
-              s.done && "bg-leaf-soft text-leaf",
+              s.done && "bg-bubble text-peach",
               s.active && !s.done && "bg-bubble text-coral",
               !s.active && !s.done && "bg-surface-muted text-ink-muted",
             )}

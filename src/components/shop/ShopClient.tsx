@@ -13,7 +13,7 @@ import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldLabel } from "@/components/ui/field-label";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
-import { formatDateTimeUtc } from "@/lib/format-display";
+import { formatDateTimeChina } from "@/lib/format-display";
 import type { ExchangeHistoryItemDTO, GiftDTO } from "@/types/domain";
 
 type Props = {
@@ -223,7 +223,7 @@ export function ShopClient({ coins, gifts, exchangeHistory }: Props) {
                   <span className="font-medium">{e.giftName}</span>
                   <span className="text-ink-muted">
                     -{e.pointsSpent} 金币 ·{" "}
-                    {formatDateTimeUtc(e.createdAt)}
+                    {formatDateTimeChina(e.createdAt)}
                   </span>
                 </li>
               ))}

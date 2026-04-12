@@ -14,7 +14,7 @@ export function StatPill({
 }) {
   const toneClass =
     tone === "xp"
-      ? "bg-leaf-soft text-leaf"
+      ? "bg-bubble text-peach"
       : tone === "coins"
         ? "bg-bubble text-coral"
         : "bg-surface-muted text-ink";

@@ -298,7 +298,7 @@ export function PetParadiseClient({ pet, rules, history }: Props) {
         <div className="rounded-[28px] border border-white/90 bg-[#fffffe] p-5 shadow-[0_24px_80px_-32px_rgba(74,55,40,0.14)] sm:p-6">
           <div className="relative min-h-[12rem] w-full sm:min-h-[14rem]">
             <div className="absolute left-0 top-0 z-[4] flex flex-col items-start gap-2 sm:left-1">
-              <span className="rounded-full bg-[#4cbea2] px-3 py-1 text-xs font-bold tracking-tight text-white shadow-sm">
+              <span className="rounded-full bg-peach px-3 py-1 text-xs font-bold tracking-tight text-white shadow-sm">
                 Lv.{level}
               </span>
               <button
