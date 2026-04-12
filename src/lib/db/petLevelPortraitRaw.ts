@@ -44,8 +44,8 @@ export async function upsertPetLevelPortraitRaw(
     Prisma.sql`
       INSERT INTO "PetLevelPortrait" ("id", "petId", "level", "imagePath", "createdAt", "updatedAt")
       VALUES (${id}, ${petId}, ${level}, ${imagePath}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      ON CONFLICT("petId", "level") DO UPDATE SET
-        "imagePath" = excluded."imagePath",
+      ON CONFLICT ("petId", "level") DO UPDATE SET
+        "imagePath" = EXCLUDED."imagePath",
         "updatedAt" = CURRENT_TIMESTAMP
     `,
   );

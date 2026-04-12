@@ -21,8 +21,10 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       ...process.env,
+      /** 默认连本机 Postgres；无库时可 `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy_e2e postgres:16-alpine` */
       DATABASE_URL:
-        process.env.DATABASE_URL ?? "file:./prisma/e2e-local.db",
+        process.env.DATABASE_URL ??
+        "postgresql://postgres:postgres@127.0.0.1:5432/happy_e2e",
       AUTH_SECRET:
         process.env.AUTH_SECRET ??
         "playwright-e2e-auth-secret-min-32-characters!!",

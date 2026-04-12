@@ -1,12 +1,14 @@
 # 宠物乐园（happy）
 
-Next.js 16 + Prisma + SQLite（本地）的行为激励与宠物养成演示应用。
+Next.js 16 + Prisma + PostgreSQL 的行为激励与宠物养成演示应用。
 
 ## 本地开发
 
+需本机或 Docker 可访问的 **PostgreSQL**（示例：`docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy postgres:16-alpine`）。在 `.env` 中设置 `DATABASE_URL`，例如 `postgresql://postgres:postgres@localhost:5432/happy`。
+
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env   # 按需填写 DATABASE_URL
 npx prisma migrate deploy
 npm run db:seed
 npm run dev
@@ -69,7 +71,7 @@ git push -u origin main
 
    其中已包含 `prisma migrate deploy`（应用迁移）+ `prisma generate` + `next build`。
 
-3. **数据库**：Serverless 环境**没有持久化本地文件**，不要使用仓库里的 SQLite 文件作为生产库。请使用 **Neon / Supabase / Vercel Postgres** 等，在 Vercel 环境变量中配置 `DATABASE_URL`（PostgreSQL 连接串），并在本地用 `postgresql` 数据源跑通迁移后再部署（需将 `schema.prisma` 的 `provider` 改为 `postgresql` 并生成对应迁移，与当前 SQLite 开发库可分开维护）。
+3. **数据库**：在 Vercel **Environment Variables** 中配置 `DATABASE_URL` 为托管 Postgres 连接串（**Neon / Supabase / Vercel Postgres** 等）。首次部署前在空库上执行迁移（`vercel-build` 已包含 `prisma migrate deploy`）。本地开发同样需要 Postgres，见下文。
 
 4. **上传图片**：`public/uploads` 在 Serverless 上**非持久**。生产环境长期方案为对象存储（S3 / R2 等）；当前实现适合本地开发。
 
