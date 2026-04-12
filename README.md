@@ -77,6 +77,14 @@ git push -u origin main
    
    `vercel-build` 会在构建时执行 `prisma migrate deploy`，需能连上 `DIRECT_URL`。若日志仍失败，请把 **Prisma 报错全文**（`Error code: P…` 起）复制出来排查。
 
+   **构建报 `P3018`，日志里 `-- CreateTable` 前有多余不可见字符**：多为 **UTF-8 BOM**（例如用 PowerShell `Out-File` 生成迁移时）。`migration.sql` 须为 **UTF-8 无 BOM**，文件开头应直接是 `--`。
+
+   **构建报 `P3009`（migrate found failed migrations）**：目标库里 `_prisma_migrations` 中有一条**失败**记录，新迁移会被拒绝。处理思路：
+   - **库可清空**（常见：第一次部署试错了）：在托管方 SQL 控制台执行 `DROP SCHEMA public CASCADE; CREATE SCHEMA public;`（并恢复 `public` 的默认权限，依提供商文档为准），再 Redeploy。
+   - **保留库、只清失败标记**：在本机配置与 Vercel 相同的 `DIRECT_URL` 后执行  
+     `npx prisma migrate resolve --rolled-back 20260412180000_init_postgres`  
+     然后重新部署；若表结构其实已经建好，可改用 `--applied`（需确认与真实库一致）。
+
 4. **上传图片**：`public/uploads` 在 Serverless 上**非持久**。生产环境长期方案为对象存储（S3 / R2 等）；当前实现适合本地开发。
 
 5. 若启用登录：在 Vercel 中同样配置 `AUTH_ENABLED`、`DEMO_LOGIN_SECRET`、`AUTH_SECRET`，并确保生产数据库已 `seed` 出用户后再登录。

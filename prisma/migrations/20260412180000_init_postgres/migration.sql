@@ -1,4 +1,4 @@
-﻿-- CreateTable
+-- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT,
@@ -118,4 +118,3 @@ ALTER TABLE "ExchangeLog" ADD CONSTRAINT "ExchangeLog_petId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "ExchangeLog" ADD CONSTRAINT "ExchangeLog_giftId_fkey" FOREIGN KEY ("giftId") REFERENCES "Gift"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
