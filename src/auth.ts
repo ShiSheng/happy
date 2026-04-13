@@ -1,17 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
-
-const authSecret =
-  process.env.AUTH_SECRET ??
-  process.env.NEXTAUTH_SECRET ??
-  (process.env.NODE_ENV === "production"
-    ? undefined
-    : "development-only-auth-secret-min-32-characters!");
+import { getAuthSecret } from "@/lib/auth-secret";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
-  secret: authSecret,
+  secret: getAuthSecret(),
   providers: [
     Credentials({
       name: "口令",
