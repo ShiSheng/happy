@@ -37,6 +37,7 @@ export async function fetchSettingsData() {
   const byPet = groupPortraitRowsByPetId(portraitRows);
   const currentPetId = await getDefaultPetIdForUser(userId);
   return {
+    username: user.username,
     email: user.email,
     currentPetId,
     pets: user.pets.map((p) =>

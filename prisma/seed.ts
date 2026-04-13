@@ -1,17 +1,38 @@
 import { PrismaClient } from "@prisma/client";
 import { defaultNewPetName } from "../src/lib/constants/petLevelPresentation";
+import { hashPassword } from "../src/lib/password";
 
 /** 与 migrate deploy 一致优先直连：Vercel 上 DATABASE_URL 若为不可从构建环境访问的地址时，seed 仍可用 DIRECT_URL */
 const prisma = new PrismaClient({
   datasourceUrl: process.env.DIRECT_URL ?? process.env.DATABASE_URL,
 });
 
-async function main() {
-  const user = await prisma.user.upsert({
-    where: { email: "demo@local" },
-    update: {},
-    create: { email: "demo@local" },
+async function ensureDemoUser() {
+  const demoPass = process.env.SEED_DEMO_PASSWORD ?? "demo123";
+  const passwordHash = await hashPassword(demoPass);
+
+  let user = await prisma.user.findUnique({ where: { username: "demo" } });
+  if (user) return user;
+
+  const legacy = await prisma.user.findFirst({ where: { email: "demo@local" } });
+  if (legacy) {
+    return prisma.user.update({
+      where: { id: legacy.id },
+      data: { username: "demo", passwordHash },
+    });
+  }
+
+  return prisma.user.create({
+    data: {
+      username: "demo",
+      email: "demo@local",
+      passwordHash,
+    },
   });
+}
+
+async function main() {
+  const user = await ensureDemoUser();
 
   const petCount = await prisma.pet.count({ where: { userId: user.id } });
   if (petCount === 0) {

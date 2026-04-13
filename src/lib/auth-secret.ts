@@ -1,10 +1,23 @@
-/** 与 NextAuth / getToken 共用，避免 middleware 与 auth 配置重复散落 */
-export function getAuthSecret(): string | undefined {
-  return (
-    process.env.AUTH_SECRET ??
-    process.env.NEXTAUTH_SECRET ??
-    (process.env.NODE_ENV === "production"
-      ? undefined
-      : "development-only-auth-secret-min-32-characters!")
-  );
+/**
+ * 与 NextAuth / getToken 共用。
+ *
+ * 生产环境若未设置 AUTH_SECRET：未开启 AUTH_ENABLED 时仍会用 SessionProvider 请求 /api/auth，
+ * Auth.js 必须有 secret；此时使用固定占位（勿在开启登录时依赖此值）。
+ * 生产且 AUTH_ENABLED=true 时必须配置 AUTH_SECRET 或 NEXTAUTH_SECRET。
+ */
+const PRODUCTION_DEMO_AUTH_SECRET =
+  "happy-demo-auth-secret-min-32-chars-do-not-use-with-login-enabled";
+
+export function getAuthSecret(): string {
+  const fromEnv = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+  if (fromEnv) return fromEnv;
+  if (process.env.NODE_ENV !== "production") {
+    return "development-only-auth-secret-min-32-characters!";
+  }
+  if (process.env.AUTH_ENABLED === "true") {
+    throw new Error(
+      "生产环境已设置 AUTH_ENABLED=true，必须在环境变量中配置 AUTH_SECRET 或 NEXTAUTH_SECRET（建议 openssl rand -base64 32）。",
+    );
+  }
+  return PRODUCTION_DEMO_AUTH_SECRET;
 }

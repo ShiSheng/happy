@@ -7,6 +7,7 @@ export default async function SettingsPage() {
   const data = await fetchSettingsData();
   return (
     <SettingsClient
+      username={data.username}
       email={data.email}
       pets={data.pets}
       currentPetId={data.currentPetId}

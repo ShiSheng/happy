@@ -18,12 +18,13 @@ import type { PetDTO } from "@/types/domain";
 const LEVEL_ROWS = listPetLevelPresentations();
 
 type Props = {
+  username: string | null;
   email: string | null;
   pets: PetDTO[];
   currentPetId: string;
 };
 
-export function SettingsClient({ email, pets, currentPetId }: Props) {
+export function SettingsClient({ username, email, pets, currentPetId }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export function SettingsClient({ email, pets, currentPetId }: Props) {
     <div className="mx-auto max-w-3xl space-y-8">
       <PageHeader
         title="系统设置"
-        description="账号信息与宠物管理（演示环境为单用户）。"
+        description="账号信息与宠物管理。"
       />
 
       {msg ? (
@@ -53,9 +54,15 @@ export function SettingsClient({ email, pets, currentPetId }: Props) {
           <CardTitle>账号</CardTitle>
         </CardHeader>
         <CardBody>
-          <p className="text-sm text-ink-muted">
-            邮箱：{" "}
-            <span className="font-medium text-ink">{email ?? "（未设置）"}</span>
+          <p className="space-y-1 text-sm text-ink-muted">
+            <span className="block">
+              账号：{" "}
+              <span className="font-medium text-ink">{username ?? "（未设置）"}</span>
+            </span>
+            <span className="block">
+              邮箱：{" "}
+              <span className="font-medium text-ink">{email ?? "（未设置）"}</span>
+            </span>
           </p>
         </CardBody>
       </Card>

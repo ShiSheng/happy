@@ -28,18 +28,18 @@ npm run dev
 
 多宠时，侧栏可切换「当前宠物」；系统设置里也可「设为当前参展」。乐园互动、历史与经验结算均绑定该宠物。
 
-### 可选登录（`AUTH_ENABLED`）
+### 可选多用户登录（`AUTH_ENABLED`）
 
 默认关闭：使用 `DEFAULT_USER_ID` 或库内最早用户。
 
 开启步骤：
 
 1. `.env` 中设置 `AUTH_ENABLED=true`
-2. 设置 `DEMO_LOGIN_SECRET`（登录页口令）
-3. 设置 `AUTH_SECRET`（或 `NEXTAUTH_SECRET`，随机字符串）
-4. 访问 `/login` 输入口令登录；未登录访问业务页会被中间件重定向到登录页
+2. 设置 `AUTH_SECRET`（或 `NEXTAUTH_SECRET`，随机字符串，生产必填）
+3. 访问 **`/register`** 自助注册账号（2～20 位小写字母/数字/下划线，密码至少 6 位），或 seed 后使用演示账号 **`demo`**（密码见环境变量 `SEED_DEMO_PASSWORD`，默认 `demo123`）
+4. 访问 **`/login`** 用账号密码登录；未登录访问业务页会被中间件重定向到登录页
 
-生产环境请改用正规身份方案（OAuth、邮箱魔法链接等），并替换 `src/auth.ts` 中的 Credentials 逻辑。
+生产环境若需更高安全（验证码、OAuth、邮箱验证等），可在 `src/auth.ts` 与注册逻辑上扩展。
 
 ---
 
@@ -87,7 +87,7 @@ git push -u origin main
 
 4. **上传图片**：`public/uploads` 在 Serverless 上**非持久**。生产环境长期方案为对象存储（S3 / R2 等）；当前实现适合本地开发。
 
-5. 若启用登录：在 Vercel 中同样配置 `AUTH_ENABLED`、`DEMO_LOGIN_SECRET`、`AUTH_SECRET`，并确保生产数据库已 `seed` 出用户后再登录。
+5. 若启用登录：在 Vercel 中同样配置 `AUTH_ENABLED`、`AUTH_SECRET`（或 `NEXTAUTH_SECRET`）；构建会执行 `prisma db seed` 创建演示用户 `demo`（密码默认 `demo123`，可用 `SEED_DEMO_PASSWORD` 覆盖）。用户也可访问 `/register` 注册新账号。
 
 ---
 

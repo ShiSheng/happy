@@ -2,25 +2,36 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 import { getAuthSecret } from "@/lib/auth-secret";
+import { verifyPassword } from "@/lib/password";
+import { normalizeUsername } from "@/lib/username";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   secret: getAuthSecret(),
   providers: [
     Credentials({
-      name: "口令",
+      name: "账号密码",
       credentials: {
-        secret: { label: "登录口令", type: "password" },
+        username: { label: "账号", type: "text" },
+        password: { label: "密码", type: "password" },
       },
       authorize: async (credentials) => {
         if (process.env.AUTH_ENABLED !== "true") return null;
-        const expected = process.env.DEMO_LOGIN_SECRET;
-        if (!expected || credentials?.secret !== expected) return null;
-        const u = await prisma.user.findFirst({
-          orderBy: { createdAt: "asc" },
+        const username = normalizeUsername(
+          String(credentials?.username ?? ""),
+        );
+        const password = String(credentials?.password ?? "");
+        if (!username || !password) return null;
+        const u = await prisma.user.findUnique({
+          where: { username },
         });
-        if (!u) return null;
-        return { id: u.id, name: u.email ?? "用户" };
+        if (!u || !(await verifyPassword(password, u.passwordHash))) {
+          return null;
+        }
+        return {
+          id: u.id,
+          name: u.username ?? u.email ?? "用户",
+        };
       },
     }),
   ],

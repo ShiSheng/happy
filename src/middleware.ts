@@ -12,16 +12,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
   const p = req.nextUrl.pathname;
-  if (p.startsWith("/login") || p.startsWith("/api/auth")) {
+  if (
+    p.startsWith("/login") ||
+    p.startsWith("/register") ||
+    p.startsWith("/api/auth")
+  ) {
     return NextResponse.next();
   }
 
   const secret = getAuthSecret();
-  if (!secret) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
 
   const isHttps = req.nextUrl.protocol === "https:";
   const token = await getToken({

@@ -1,33 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { registerUser } from "@/app/actions/register-actions";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field-label";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 
-function LoginForm() {
-  const searchParams = useSearchParams();
-  const registered = searchParams.get("registered") === "1";
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function RegisterPage() {
+  const router = useRouter();
   const [err, setErr] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   return (
     <div className="mx-auto max-w-md space-y-6">
       <PageHeader
-        title="登录"
-        description="使用已注册的账号与密码。开启 AUTH_ENABLED 后生效。"
+        title="注册"
+        description="账号仅含小写字母、数字与下划线（2～20 位）；密码至少 6 位。"
       />
-      {registered ? (
-        <p className="rounded-2xl bg-peach-soft px-4 py-2 text-sm text-ink">
-          注册成功，请登录。
-        </p>
-      ) : null}
       {err ? (
         <p className="rounded-2xl bg-terracotta-soft px-4 py-2 text-sm text-terracotta">
           {err}
@@ -40,16 +32,13 @@ function LoginForm() {
           setErr(null);
           setPending(true);
           try {
-            const r = await signIn("credentials", {
-              username,
-              password,
-              redirect: false,
-            });
-            if (r?.error) {
-              setErr("账号或密码错误，或登录未启用");
+            const fd = new FormData(e.currentTarget);
+            const r = await registerUser(undefined, fd);
+            if (!r.ok) {
+              setErr(r.error);
               return;
             }
-            window.location.href = "/pet-paradise";
+            router.push("/login?registered=1");
           } finally {
             setPending(false);
           }
@@ -60,10 +49,9 @@ function LoginForm() {
           <Input
             type="text"
             name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
             disabled={pending}
+            required
           />
         </label>
         <label className="flex flex-col gap-1.5">
@@ -71,30 +59,33 @@ function LoginForm() {
           <Input
             type="password"
             name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
+            autoComplete="new-password"
             disabled={pending}
+            required
+            minLength={6}
+          />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <FieldLabel>确认密码</FieldLabel>
+          <Input
+            type="password"
+            name="confirm"
+            autoComplete="new-password"
+            disabled={pending}
+            required
+            minLength={6}
           />
         </label>
         <Button type="submit" variant="positive" className="w-full" disabled={pending}>
-          {pending ? "登录中…" : "进入"}
+          {pending ? "提交中…" : "注册"}
         </Button>
       </form>
       <p className="text-center text-sm text-ink-muted">
-        还没有账号？{" "}
-        <Link href="/register" className="font-medium text-peach underline-offset-2 hover:underline">
-          注册
+        已有账号？{" "}
+        <Link href="/login" className="font-medium text-peach underline-offset-2 hover:underline">
+          登录
         </Link>
       </p>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="mx-auto max-w-md animate-pulse text-ink-muted">加载中…</div>}>
-      <LoginForm />
-    </Suspense>
   );
 }
