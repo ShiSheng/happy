@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { defaultNewPetName } from "../src/lib/constants/petLevelPresentation";
 
-const prisma = new PrismaClient();
+/** 与 migrate deploy 一致优先直连：Vercel 上 DATABASE_URL 若为不可从构建环境访问的地址时，seed 仍可用 DIRECT_URL */
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DIRECT_URL ?? process.env.DATABASE_URL,
+});
 
 async function main() {
   const user = await prisma.user.upsert({
