@@ -86,7 +86,7 @@ export function MainShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-canvas md:flex-row">
+    <div className="isolate flex min-h-0 flex-1 flex-col bg-canvas md:flex-row">
       <header className="flex min-h-14 items-center justify-between border-b border-line bg-surface/90 px-4 py-2 backdrop-blur-md md:hidden">
         <div className="flex flex-col">
           <span className="text-base font-bold text-ink">宠物乐园</span>
@@ -106,7 +106,7 @@ export function MainShell({
       {drawerOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-ink/20 md:hidden"
+          className="fixed inset-0 z-[45] bg-ink/20 md:hidden"
           aria-label="关闭菜单"
           onClick={() => setDrawerOpen(false)}
         />
@@ -114,8 +114,11 @@ export function MainShell({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] border-r border-line bg-surface p-4 shadow-xl transition-transform duration-200 ease-out md:static md:z-0 md:translate-x-0 md:shadow-none",
-          drawerOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+          "fixed inset-y-0 left-0 w-64 max-w-[85vw] border-r border-line bg-surface p-4 shadow-xl transition-transform duration-200 ease-out md:static md:shadow-none",
+          /* 抽屉打开时盖在主内容之上；收起时降 z-index 并禁用命中，避免挡主区（仅靠 pointer-events 在部分内核仍异常） */
+          drawerOpen
+            ? "z-[50] translate-x-0 pointer-events-auto"
+            : "-translate-x-full z-[30] max-md:pointer-events-none md:translate-x-0 md:z-0 md:pointer-events-auto",
         )}
       >
         <div className="mb-6 hidden md:block">
@@ -131,13 +134,14 @@ export function MainShell({
           pathname={pathname}
           onNavigate={() => setDrawerOpen(false)}
         />
-        <AuthNavLinks
-          enabled={showLoginLink}
-          onNavigate={() => setDrawerOpen(false)}
-        />
+        {showLoginLink ? (
+          <AuthNavLinks onNavigate={() => setDrawerOpen(false)} />
+        ) : null}
       </aside>
 
-      <main className="min-h-0 flex-1 overflow-auto p-4 md:p-8">{children}</main>
+      <main className="relative z-[40] min-h-0 flex-1 overflow-auto p-4 md:p-8">
+        {children}
+      </main>
     </div>
   );
 }

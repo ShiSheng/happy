@@ -4,11 +4,12 @@ Next.js 16 + Prisma + PostgreSQL 的行为激励与宠物养成演示应用。
 
 ## 本地开发
 
-需本机或 Docker 可访问的 **PostgreSQL**（示例：`docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy postgres:16-alpine`）。在 `.env` 中设置 `DATABASE_URL` 与 `DIRECT_URL`（本地可填相同值），见 `[.env.example](.env.example)`。
+需本机 **PostgreSQL**（与 Vercel 线上库分开，本地库名建议 `happy_dev`）。**无 Docker 的 Windows** 且不想装 C 盘：按 [`docs/postgresql-windows-non-c.md`](docs/postgresql-windows-non-c.md) 安装到 E:/ 或 D:/，可选运行 `.\scripts\init-local-db.ps1` 创建库。有 Docker 时可用：`docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=happy_dev postgres:16-alpine`。在 `.env` 中设置 `DATABASE_URL` 与 `DIRECT_URL`，见 `[.env.example](.env.example)`。
 
 ```bash
 npm install
-cp .env.example .env   # 按需填写 DATABASE_URL、DIRECT_URL
+cp .env.example .env   # 按需填写 DATABASE_URL、DIRECT_URL（示例已用 127.0.0.1，减少 Windows 上 localhost/IPv6 问题）
+npm run env:check      # 校验变量格式并 prisma validate
 npx prisma migrate deploy
 npm run db:seed
 npm run dev
@@ -18,7 +19,9 @@ npm run dev
 
 ### 环境变量
 
-见根目录 `[.env.example](.env.example)`。**勿**将含真实密钥的 `.env` 提交到 Git。
+见根目录 `[.env.example](.env.example)` 与 [`docs/environment.md`](docs/environment.md)。**勿**将含真实密钥的 `.env` 提交到 Git。
+
+用手机/局域网 IP 访问且开启 `AUTH_ENABLED` 时，建议在 `.env` 设置 **`AUTH_URL`**（与浏览器地址栏根 URL 一致，含 `http://` 与端口）。
 
 ### Prisma（Windows `EPERM`）
 
@@ -88,6 +91,7 @@ git push -u origin main
 
 | 命令                     | 说明                                          |
 | ---------------------- | ------------------------------------------- |
+| `npm run env:check`    | 检查 `.env` 数据库变量并 `prisma validate`        |
 | `npm run dev`          | 开发服务器                                       |
 | `npm run build`        | 本地构建（不含 migrate deploy）                     |
 | `npm run vercel-build` | 适合 CI/Vercel：migrate → generate → seed → build |

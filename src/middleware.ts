@@ -38,5 +38,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  /**
+   * 必须排除 Next.js 内部资源与开发端点，否则会导致：
+   * - `/__nextjs_font/*` 字体请求被拦截 -> 403
+   * - `/_next/webpack-hmr` WebSocket 被拦截 -> HMR 失败，且可能连带水合/事件系统异常
+   */
+  matcher: ["/((?!_next|__nextjs|favicon.ico|.*\\..*).*)"],
 };

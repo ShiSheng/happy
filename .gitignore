@@ -45,6 +45,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# 本机 PostgreSQL 一键脚本（可含数据库密码，勿提交）
+scripts/local-postgres.ps1
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

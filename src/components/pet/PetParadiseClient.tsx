@@ -137,22 +137,28 @@ export function PetParadiseClient({ pet, rules, history }: Props) {
     setMessage(null);
     const ids = [...selected];
     startTransition(async () => {
-      const res = await recordInteraction(ids);
-      if (!res.ok) {
-        setMessage(res.error);
-        return;
+      try {
+        const res = await recordInteraction(ids);
+        if (!res.ok) {
+          setMessage(res.error);
+          return;
+        }
+        setWizard({
+          kind: "celebration",
+          payload: {
+            totalXp: res.totalXp,
+            totalCoins: res.totalCoins,
+            polarity: res.polarity,
+          },
+        });
+        setRewardPulse((n) => n + 1);
+        setSelected(new Set());
+        router.refresh();
+      } catch {
+        setMessage(
+          "提交失败，可能是会话失效或网络受限；请刷新页面后重试。",
+        );
       }
-      setWizard({
-        kind: "celebration",
-        payload: {
-          totalXp: res.totalXp,
-          totalCoins: res.totalCoins,
-          polarity: res.polarity,
-        },
-      });
-      setRewardPulse((n) => n + 1);
-      setSelected(new Set());
-      router.refresh();
     });
   }
 

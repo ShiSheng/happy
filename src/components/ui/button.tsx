@@ -29,6 +29,7 @@ export function Button({
   variant = "primary",
   size = "default",
   children,
+  type = "button",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
@@ -42,7 +43,6 @@ export function Button({
 
   return (
     <button
-      type="button"
       className={cn(
         "inline-flex items-center justify-center rounded-2xl transition-all duration-200 ease-out",
         sizeClass,
@@ -50,6 +50,7 @@ export function Button({
         className,
       )}
       {...props}
+      type={type}
     >
       {children}
     </button>

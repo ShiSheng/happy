@@ -1,8 +1,8 @@
 /**
  * 与 NextAuth / getToken 共用。
  *
- * 生产环境若未设置 AUTH_SECRET：未开启 AUTH_ENABLED 时仍会用 SessionProvider 请求 /api/auth，
- * Auth.js 必须有 secret；此时使用固定占位（勿在开启登录时依赖此值）。
+ * 未开启 AUTH_ENABLED 时根布局不挂 SessionProvider；仅 /login、/register 路由在 (auth) 布局下按需挂载。
+ * 生产且未设 AUTH_SECRET、但有人访问登录页时 Auth.js 仍需要 secret，此时使用固定占位（勿在开启登录时依赖此值）。
  * 生产且 AUTH_ENABLED=true 时必须配置 AUTH_SECRET 或 NEXTAUTH_SECRET。
  */
 const PRODUCTION_DEMO_AUTH_SECRET =

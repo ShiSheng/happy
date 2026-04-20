@@ -4,16 +4,13 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 
-/** AUTH_ENABLED 时在侧栏显示登录 / 退出 */
+/** 仅在开启全站登录且根布局已挂 SessionProvider 时渲染（见 MainShell） */
 export function AuthNavLinks({
-  enabled,
   onNavigate,
 }: {
-  enabled: boolean;
   onNavigate?: () => void;
 }) {
   const { status } = useSession();
-  if (!enabled) return null;
   if (status === "authenticated") {
     return (
       <Button

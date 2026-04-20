@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useActionState, Suspense } from "react";
+import { loginUser } from "@/app/actions/login-actions";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field-label";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,7 @@ import { PageHeader } from "@/components/ui/page-header";
 function LoginForm() {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered") === "1";
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const [state, formAction, pending] = useActionState(loginUser, undefined);
 
   return (
     <div className="mx-auto max-w-md space-y-6">
@@ -28,42 +25,20 @@ function LoginForm() {
           注册成功，请登录。
         </p>
       ) : null}
-      {err ? (
+      {state?.ok === false ? (
         <p className="rounded-2xl bg-terracotta-soft px-4 py-2 text-sm text-terracotta">
-          {err}
+          {state.error}
         </p>
       ) : null}
-      <form
-        className="space-y-4"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setErr(null);
-          setPending(true);
-          try {
-            const r = await signIn("credentials", {
-              username,
-              password,
-              redirect: false,
-            });
-            if (r?.error) {
-              setErr("账号或密码错误，或登录未启用");
-              return;
-            }
-            window.location.href = "/pet-paradise";
-          } finally {
-            setPending(false);
-          }
-        }}
-      >
+      <form method="post" className="space-y-4" action={formAction}>
         <label className="flex flex-col gap-1.5">
           <FieldLabel>账号</FieldLabel>
           <Input
             type="text"
             name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
             disabled={pending}
+            required
           />
         </label>
         <label className="flex flex-col gap-1.5">
@@ -71,10 +46,9 @@ function LoginForm() {
           <Input
             type="password"
             name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             disabled={pending}
+            required
           />
         </label>
         <Button type="submit" variant="positive" className="w-full" disabled={pending}>

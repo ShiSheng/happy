@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useActionState } from "react";
 import { registerUser } from "@/app/actions/register-actions";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field-label";
@@ -10,9 +9,7 @@ import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [err, setErr] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const [state, formAction, pending] = useActionState(registerUser, undefined);
 
   return (
     <div className="mx-auto max-w-md space-y-6">
@@ -20,30 +17,12 @@ export default function RegisterPage() {
         title="注册"
         description="账号仅含小写字母、数字与下划线（2～20 位）；密码至少 6 位。"
       />
-      {err ? (
+      {state?.ok === false ? (
         <p className="rounded-2xl bg-terracotta-soft px-4 py-2 text-sm text-terracotta">
-          {err}
+          {state.error}
         </p>
       ) : null}
-      <form
-        className="space-y-4"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setErr(null);
-          setPending(true);
-          try {
-            const fd = new FormData(e.currentTarget);
-            const r = await registerUser(undefined, fd);
-            if (!r.ok) {
-              setErr(r.error);
-              return;
-            }
-            router.push("/login?registered=1");
-          } finally {
-            setPending(false);
-          }
-        }}
-      >
+      <form method="post" className="space-y-4" action={formAction}>
         <label className="flex flex-col gap-1.5">
           <FieldLabel>账号</FieldLabel>
           <Input

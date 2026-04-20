@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
 import {
@@ -9,10 +10,10 @@ import {
 } from "@/lib/username";
 import { defaultNewPetName } from "@/lib/constants/petLevelPresentation";
 
-export type RegisterState = { ok: false; error: string } | { ok: true };
+export type RegisterState = { ok: false; error: string } | undefined;
 
 export async function registerUser(
-  _prev: RegisterState | undefined,
+  _prev: RegisterState,
   formData: FormData,
 ): Promise<RegisterState> {
   if (process.env.AUTH_ENABLED !== "true") {
@@ -63,5 +64,5 @@ export async function registerUser(
     });
   });
 
-  return { ok: true };
+  redirect("/login?registered=1");
 }
